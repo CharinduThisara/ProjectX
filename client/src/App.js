@@ -1,11 +1,12 @@
 import "./App.css";
 import { useState } from 'react';
 import io from 'socket.io-client';
+import Chat from "./Chat";
 
 const socket = io.connect("http://localhost:3001")
 
 function App() {
-  const[username, setUsername] = useState("");
+  const[username, setUsername] = useState(""); //assign the value of the input box dynamically
   const [room, setRoom] = useState("");
 
   const joinRoom = () => {
@@ -32,6 +33,8 @@ function App() {
       }}
       />
       <button onClick={joinRoom}>Join A Room</button>
+
+      <Chat socket={socket} username={username} room={room}/>
     </div>
   );
 }
