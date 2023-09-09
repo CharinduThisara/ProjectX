@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import ScrollToBottom from 'react-scroll-to-bottom'
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import Logout from "./Logout";
@@ -9,8 +8,14 @@ import { sendMessageRoute, receiveMessageRoute } from "../utils/APIRoutes";
 
 export default function ChatContainer({ currentChat, socket }) {
   const [messages, setMessages] = useState([]);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  function scrollTo(ref) {
+    console.log(ref)
+    if (!ref.current) return;
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  }
 
   async function handleSendMsg (msg) {
     const data = await JSON.parse(
@@ -66,13 +71,9 @@ export default function ChatContainer({ currentChat, socket }) {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
- /*  useEffect(() => {
-    console.log(scrollRef)
-    scrollRef.current.scrollIntoView({
-      behavior:"smooth"
-    })
-    
-  }, [messages]); */
+  useEffect(() => {
+    scrollTo(scrollRef);
+  }, [messages]);
 
   return (
     <Container>
@@ -90,8 +91,8 @@ export default function ChatContainer({ currentChat, socket }) {
         </div>
         <Logout />
       </div>
-      <ScrollToBottom>
-      <div className="chat-messages">
+      <div className="chat-messages"> 
+      
         {messages.map((message) => {
           return (
             <div ref={scrollRef} key={uuidv4()}>
@@ -107,8 +108,8 @@ export default function ChatContainer({ currentChat, socket }) {
             </div>
           );
         })}
+      
       </div>
-      </ScrollToBottom>
       <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );
