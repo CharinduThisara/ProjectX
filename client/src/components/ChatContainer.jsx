@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import ScrollToBottom from 'react-scroll-to-bottom'
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import Logout from "./Logout";
@@ -55,7 +56,7 @@ export default function ChatContainer({ currentChat, socket }) {
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-receive", (msg) => {
+      socket.current.on("msg-received", (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
@@ -65,7 +66,7 @@ export default function ChatContainer({ currentChat, socket }) {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
-  /* useEffect(() => {
+ /*  useEffect(() => {
     console.log(scrollRef)
     scrollRef.current.scrollIntoView({
       behavior:"smooth"
@@ -89,6 +90,7 @@ export default function ChatContainer({ currentChat, socket }) {
         </div>
         <Logout />
       </div>
+      <ScrollToBottom>
       <div className="chat-messages">
         {messages.map((message) => {
           return (
@@ -106,6 +108,7 @@ export default function ChatContainer({ currentChat, socket }) {
           );
         })}
       </div>
+      </ScrollToBottom>
       <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );

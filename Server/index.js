@@ -60,14 +60,18 @@ server.listen(process.env.PORT,()=>{
 global.onlineUsers = new Map();
 
 io.on( "connection", (socket)=>{
+
     global.chatSocket = socket;
     socket.on("add-user",(userID)=>{
         onlineUsers.set(userID,socket.id);
+        
     });
 
-    socket.on("send-msg",(data)=>{
-        const sendUserSocket = onlineUsers.get(data.to)
 
+    socket.on("send-msg",(data)=>{
+        console.log(data)
+        const sendUserSocket = onlineUsers.get(data.to)
+        console.log(sendUserSocket)
         if(sendUserSocket){
             socket.to(sendUserSocket).emit("msg-received",data.msg);
 
